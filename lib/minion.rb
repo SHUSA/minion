@@ -104,7 +104,7 @@ def run
         end
 
         def amqp_url
-                @@amqp_url ||= ENV["AMQP_URL"] || "amqp://guest:guest@localhost/"
+                @@amqp_url ||= ENV["AMQP_URL"] || "amqp://guest:guest@localhost"
         end
 
         def amqp_url=(url)
