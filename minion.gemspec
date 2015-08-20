@@ -38,16 +38,16 @@ Gem::Specification.new do |s|
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
       s.add_runtime_dependency(%q<amqp>, ["~> 0.6.7"])
       s.add_runtime_dependency(%q<bunny>, ["~> 0.6.0"])
-      s.add_runtime_dependency(%q<json>, ["~> 1.2.0"])
+      s.add_runtime_dependency(%q<json>, [">= 1.2.0"])
     else
       s.add_dependency(%q<amqp>, ["~> 0.6.7"])
       s.add_dependency(%q<bunny>, ["~> 0.6.0"])
-      s.add_dependency(%q<json>, ["~> 1.2.0"])
+      s.add_dependency(%q<json>, [">= 1.2.0"])
     end
   else
     s.add_dependency(%q<amqp>, ["~> 0.6.7"])
     s.add_dependency(%q<bunny>, ["~> 0.6.0"])
-    s.add_dependency(%q<json>, ["~> 1.2.0"])
+    s.add_dependency(%q<json>, [">= 1.2.0"])
   end
 end
 
