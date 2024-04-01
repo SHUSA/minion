@@ -18,7 +18,7 @@ module Minion
     end
 
     def starttimechanged?
-      if @starttime == (st = starttime)
+      if @starttime != (st = starttime)
         (@starttime = st) && true
       end || false
     end
