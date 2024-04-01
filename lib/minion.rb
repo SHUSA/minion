@@ -53,7 +53,7 @@ module Minion
     handler.sub = lambda do
       log "subscribing to #{queue}"
       @@channel.queue(queue, :durable => true, :auto_delete => false).subscribe(:ack => true) do |h,m|
-        return if AMQP.closing?
+        return if AMQP.closing? || handler.starttimechanged?
         begin
           log "recv: #{queue}:#{m}"
 
