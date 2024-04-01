@@ -1,30 +1,44 @@
 module Minion
-	class Handler
-		attr_accessor :queue, :sub, :unsub, :when, :on
-		def initialize(queue)
-			@queue = queue
-			@when = lambda { true }
-			@sub = lambda {}
-			@unsub = lambda {}
-			@on = false
-		end
+  class Handler
+    attr_accessor :queue, :sub, :unsub, :when, :on
 
-		def should_sub?
-			@when.call
-		end
+    STARTFILE = "./tmp/restart.txt"
 
-		def check
-			if should_sub?
-				@sub.call unless @on
-				@on = true
-			else
-				@unsub.call if @on
-				@on = false
-			end
-		end
+    def initialize(queue)
+      @queue = queue
+      @when = lambda { !starttimechanged? }
+      @sub = lambda {}
+      @unsub = lambda {}
+      @on = false
+      @starttime = starttime
+    end
 
-		def to_s
-			"<handler queue=#{@queue} on=#{@on}>"
-		end
-	end
+    def should_sub?
+      @when.call
+    end
+
+    def starttimechanged?
+      if @starttime == (st = starttime)
+        (@starttime = st) && true
+      end || false
+    end
+
+    def starttime
+      File.exists?(STARTFILE) && File::Stat.new(STARTFILE).mtime
+    end
+
+    def check
+      if should_sub?
+        @sub.call unless @on
+        @on = true
+      else
+        @unsub.call if @on
+        @on = false
+      end
+    end
+
+    def to_s
+      "<handler queue=#{@queue} on=#{@on}>"
+    end
+  end
 end
