@@ -84,7 +84,12 @@ module Minion
   end
 
   def check_all
-    @@minion_job_handlers.each { |h| h.check }
+    @@minion_job_handlers.each do |h|
+      unless h.check
+        log "Stopping minion"
+        AMQP.stop { EventMachine.stop }
+      end
+    end
   end
 
   def run
