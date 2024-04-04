@@ -4,13 +4,18 @@ module Minion
 
     STARTFILE = "./tmp/restart.txt"
 
-    def initialize(queue)
+    def initialize(queue, logger = nil)
       @queue = queue
       @when = lambda { !starttimechanged? }
       @sub = lambda {}
       @unsub = lambda {}
       @on = false
       @starttime = starttime
+      @logger = logger || proc { |m| puts "#{Time.now} :handler: #{m}" }
+    end
+
+    def log(msg)
+      @logger.call(msg)
     end
 
     def should_sub?
@@ -19,8 +24,13 @@ module Minion
 
     def starttimechanged?
       if @starttime != (st = starttime)
-        (@starttime = st) && true
-      end || false
+        @starttime = st
+        log "Start time changed"
+        true
+      else
+        log "Start time not changed"
+        false
+      end 
     end
 
     def starttime
@@ -30,9 +40,11 @@ module Minion
     def check
       if should_sub?
         @sub.call unless @on
+        log "Handler subed to #{queue}"
         @on = true
       else
         @unsub.call if @on
+        log "Handler unsubed from #{queue}"
         @on = false
       end
     end

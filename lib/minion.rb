@@ -44,7 +44,7 @@ module Minion
   end
 
   def job(queue, options = {}, &blk)
-    handler = Minion::Handler.new queue
+    handler = Minion::Handler.new queue, @@logger
     handler.when = options[:when] if options[:when]
     handler.unsub = lambda do
       log "unsubscribing to #{queue}"
